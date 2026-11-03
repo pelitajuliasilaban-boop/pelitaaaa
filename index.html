@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="web_dashboard" name="shell-type">
+  <title>SIPAD Taput — Sistem Informasi Pendapatan Asli Daerah Kabupaten Tapanuli Utara</title>
+  
+  <!-- Google Fonts & Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-tint": "#495f80",
+            "inverse-on-surface": "#eaf1ff",
+            "on-tertiary-fixed": "#00201d",
+            "surface-variant": "#d3e4fe",
+            "secondary-fixed": "#dbe1ff",
+            "on-secondary-container": "#fefcff",
+            "on-primary-container": "#7c93b6",
+            "surface": "#f8f9ff",
+            "tertiary-fixed": "#89f5e7",
+            "secondary": "#0051d5",
+            "primary-container": "#122b49",
+            "secondary-container": "#316bf3",
+            "primary": "#001630",
+            "surface-container-low": "#eff4ff",
+            "surface-container": "#e5eeff",
+            "background": "#f8f9ff",
+            "outline": "#74777e",
+            "inverse-primary": "#b1c8ee",
+            "surface-container-high": "#dce9ff",
+            "on-primary-fixed-variant": "#314867",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#00312c",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#005049",
+            "surface-container-highest": "#d3e4fe",
+            "on-secondary-fixed-variant": "#003ea8",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#44474e",
+            "surface-container-lowest": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary": "#001a17",
+            "on-error-container": "#93000a",
+            "surface-dim": "#cbdbf5",
+            "primary-fixed-dim": "#b1c8ee",
+            "on-background": "#0b1c30",
+            "on-tertiary-container": "#2ba296",
+            "on-primary-fixed": "#001c39",
+            "on-surface": "#0b1c30",
+            "primary-fixed": "#d4e3ff",
+            "tertiary-fixed-dim": "#6bd8cb",
+            "outline-variant": "#c4c6ce",
+            "inverse-surface": "#213145",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-secondary-fixed": "#00174b",
+            "surface-bright": "#f8f9ff",
+            "error": "#ba1a1a"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "margin-tablet": "1.5rem",
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "gutter-sm": "0.75rem",
+            "margin-desktop": "2rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem"
+          },
+          fontFamily: {
+            "body-md": ["Inter", "sans-serif"],
+            "headline-xl": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="fixed inset-0 bg-primary/60 backdrop-blur-xs z-40 hidden md:hidden"></div>
+
+  <!-- Sidebar Component -->
+  <aside class="fixed left-0 top-0 h-full w-72 bg-primary-container text-on-primary z-50 flex flex-col justify-between shadow-lg select-none transform transition-transform duration-300 -translate-x-full md:translate-x-0">
+    <div class="flex flex-col flex-1 min-h-0">
+      <div class="h-16 px-space-lg flex items-center justify-between border-b border-primary/40">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-9 h-9 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary shadow-sm">
+            <span class="material-symbols-outlined text-lg">account_balance</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-base text-on-primary tracking-tight leading-none">SIPAD Taput</span>
+            <span class="text-[11px] text-on-primary-container uppercase tracking-wider mt-1">Bapenda Kab. Taput</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors" title="Perkecil Menu Sidebar" type="button" id="btnSidebarToggle">
+          <span class="material-symbols-outlined text-base">menu_open</span>
+        </button>
+      </div>
+
+      <!-- User Active Badge in Sidebar -->
+      <div class="p-space-md mx-space-md my-space-sm rounded-xl bg-primary/60 border border-outline/20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-space-xs">
+            <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+            <span class="text-[11px] text-on-primary-container uppercase font-semibold">Hak Akses</span>
+          </div>
+          <span class="px-space-xs py-0.5 rounded-full bg-secondary-container text-[10px] text-on-secondary font-semibold uppercase">Aktif</span>
+        </div>
+        <div class="mt-space-xs flex items-center justify-between gap-space-sm">
+          <span class="text-sm font-semibold text-on-primary truncate">Administrator PAD</span>
+          <button class="text-on-primary-container hover:text-on-primary transition-colors flex items-center" title="Ganti Peran Pengguna" type="button">
+            <span class="material-symbols-outlined text-sm">swap_horiz</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tree -->
+      <nav class="flex-1 overflow-y-auto px-space-md py-space-xs space-y-1">
+        <div class="px-space-sm py-1 text-[11px] text-on-primary-container uppercase tracking-wider font-semibold">Operasional Pajak</div>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors bg-secondary-container text-on-secondary font-semibold shadow-sm" data-path="dashboard" href="#">Dashboard Utama</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="data-wajib-pajak" href="#">Data Wajib Pajak</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="data-objek-pajak" href="#">Data Objek Pajak</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="tarif-dan-jenis-penerimaan" href="#">Tarif &amp; Jenis Penerimaan</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="penetapan-pajak-retribusi" href="#">Penetapan Pajak/Retribusi</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="tagihan" href="#">Tagihan &amp; SKPD</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="pembayaran" href="#">Pembayaran &amp; STS</a>
+
+        <div class="pt-space-sm px-space-sm py-1 text-[11px] text-on-primary-container uppercase tracking-wider font-semibold">Verifikasi &amp; Pengawasan</div>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="rekonsiliasi-bank" href="#">Rekonsiliasi Bank</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="petugas-lapangan" href="#">Petugas Lapangan</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="laporan-pad" href="#">Laporan Realisasi PAD</a>
+
+        <div class="pt-space-sm px-space-sm py-1 text-[11px] text-on-primary-container uppercase tracking-wider font-semibold">Administrasi Sistem</div>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="pengguna-dan-hak-akses" href="#">Pengguna &amp; Hak Akses</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="jejak-audit" href="#">Jejak Audit</a>
+        <a class="block px-space-md py-2 rounded-lg text-sm text-inverse-on-surface hover:bg-primary hover:text-on-primary transition-colors" data-path="pengaturan" href="#">Pengaturan</a>
+      </nav>
+    </div>
+
+    <div class="p-space-md border-t border-primary/40 bg-primary/40">
+      <div class="flex items-center justify-between text-on-primary-container">
+        <div class="flex items-center gap-space-xs">
+          <span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+          <span class="text-xs font-medium">TA 2025 • Server Bapenda Aktif</span>
+        </div>
+        <span class="text-xs opacity-75 font-mono">v2.4.1</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Workspace Area -->
+  <div class="md:pl-72 flex flex-col min-h-screen">
+    <!-- Header Component -->
+    <header class="fixed top-0 left-0 md:left-72 right-0 h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 border-b border-surface-container-high px-4 md:px-space-xl flex items-center justify-between gap-space-lg shadow-sm">
+      <div class="flex items-center gap-3 md:gap-space-lg min-w-0 flex-1">
+        <!-- Mobile Hamburger Trigger -->
+        <button id="btnMobileMenu" class="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors" type="button">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-space-md pr-space-lg border-r border-surface-container-high shrink-0">
+          <div class="flex flex-col">
+            <span class="font-bold text-base text-primary leading-tight">SIPAD Taput</span>
+            <span class="text-[10px] text-on-surface-variant leading-none">Kabupaten Tapanuli Utara</span>
+          </div>
+        </div>
+
+        <div class="hidden xl:flex items-center gap-space-xs text-sm text-on-surface-variant truncate">
+          <span class="hover:text-primary cursor-pointer" onclick="switchTab(0)">Beranda</span>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span class="hover:text-primary cursor-pointer">Pendapatan Asli Daerah</span>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span class="text-primary font-semibold truncate">Dashboard Utama</span>
+        </div>
+
+        <!-- Global Quick Search -->
+        <div class="flex-1 max-w-xl">
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-base">search</span>
+            <input id="globalSearchInput" class="w-full h-10 pl-10 pr-20 bg-surface-container-low border border-surface-container rounded-lg text-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:border-secondary focus:bg-surface-container-lowest transition-all" placeholder="Cari NOP, NPWPD, SKP-D, atau Nama..." type="search">
+            <kbd class="absolute right-3 px-1.5 py-0.5 rounded bg-surface-container border border-surface-container-highest text-[10px] text-on-surface-variant font-mono">Ctrl+K</kbd>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action & Profile Cluster -->
+      <div class="flex items-center gap-2 md:gap-space-md shrink-0 relative">
+        <div class="hidden lg:flex items-center gap-space-xs px-3 py-1.5 rounded-full bg-surface-container-low border border-surface-container text-xs text-on-surface">
+          <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+          <span>TA 2025 • Triwulan II</span>
+        </div>
+
+        <!-- Notification Bell Trigger -->
+        <button id="btnNotifications" class="relative w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" title="Pemberitahuan Sistem" type="button">
+          <span class="material-symbols-outlined text-xl">notifications</span>
+          <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span>
+        </button>
+
+        <!-- Dropdown Notifications Panel -->
+        <div id="panelNotifications" class="hidden absolute right-16 top-14 w-80 sm:w-96 bg-surface-container-lowest rounded-xl shadow-2xl border border-surface-container p-4 space-y-3 z-50">
+          <div class="flex items-center justify-between pb-2 border-b border-surface-container">
+            <h4 class="font-bold text-sm text-primary">Notifikasi Sistem SIPAD</h4>
+            <span class="text-[11px] font-semibold text-secondary cursor-pointer hover:underline">Tandai Dibaca</span>
+          </div>
+          <div class="space-y-2 max-h-72 overflow-y-auto">
+            <div class="p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-secondary text-base mt-0.5">verified_user</span>
+              <div class="text-xs">
+                <p class="font-semibold text-primary">14 Berkas Menunggu TTE</p>
+                <p class="text-on-surface-variant">Ketetapan SKP-D membutuhkan otorisasi sertifikat BSrE BSSN.</p>
+                <span class="text-[10px] text-outline font-mono">10 menit yang lalu</span>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-on-tertiary-container text-base mt-0.5">payments</span>
+              <div class="text-xs">
+                <p class="font-semibold text-primary">Setoran Bank Sumut Diterima</p>
+                <p class="text-on-surface-variant">CV Bonapasogit Batu Alam lunas via VA Rp 130.000.000.</p>
+                <span class="text-[10px] text-outline font-mono">1 jam yang lalu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Widget -->
+        <div class="flex items-center gap-2 md:gap-space-md pl-2 md:pl-space-md border-l border-surface-container-high">
+          <div class="flex items-center gap-2 md:gap-space-md text-left cursor-pointer">
+            <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-xs font-bold ring-2 ring-surface-container-high">BH</div>
+            <div class="hidden lg:flex flex-col">
+              <div class="flex items-center gap-space-xs">
+                <span class="text-xs font-semibold text-on-surface truncate">Drs. Bambang Hermanto, M.Si</span>
+                <span class="material-symbols-outlined text-sm text-on-surface-variant">expand_more</span>
+              </div>
+              <span class="text-[11px] text-on-surface-variant leading-none">Kepala Bidang PAD / Admin</span>
+            </div>
+          </div>
+          <button onclick="showToast('Sesi kerja Anda terlindungi.', 'info')" class="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-lg border border-error-container bg-surface-container-lowest text-xs text-error hover:bg-error-container hover:text-on-error-container transition-all" title="Keluar dari Aplikasi" type="button">
+            <span class="material-symbols-outlined text-base">logout</span>
+            <span class="hidden sm:inline">Keluar</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative pt-16 min-h-screen bg-background">
+      <div class="flex flex-col w-full">
+        <!-- Top Status Banner -->
+        <div class="bg-surface-container-low px-4 md:px-space-xl py-space-sm flex flex-col sm:flex-row items-start sm:items-center justify-between text-on-surface-variant text-xs shadow-sm gap-2">
+          <div class="flex items-center gap-2 md:gap-space-md truncate">
+            <div class="flex items-center gap-1.5 font-semibold text-primary">
+              <span class="material-symbols-outlined text-sm text-secondary">verified_user</span>
+              <span>Sistem Informasi Pendapatan Asli Daerah (SIPAD)</span>
+            </div>
+            <span class="text-outline-variant">•</span>
+            <span class="text-on-surface">Kabupaten Tapanuli Utara</span>
+            <span class="text-outline-variant hidden md:inline">•</span>
+            <span class="text-on-surface-variant hidden md:inline">Modul Regulasi &amp; Penetapan PDRD</span>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="flex items-center gap-1 text-on-tertiary-container bg-surface-container-lowest px-2.5 py-0.5 rounded-full shadow-sm text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+              <span class="font-medium">Otorisasi TTE BSrE BSSN</span>
+            </div>
+            <span class="text-outline-variant">•</span>
+            <span>Sinkronisasi BPKAD: <strong class="font-mono text-on-surface">14:32 WIB</strong></span>
+          </div>
+        </div>
+
+        <div class="p-4 md:p-space-xl space-y-space-xl">
+          <!-- Header Hero Section with Actions -->
+          <div class="flex flex-col xl:flex-row xl:items-start justify-between gap-space-lg bg-surface-container-lowest p-4 md:p-space-xl rounded-xl shadow-sm">
+            <div class="space-y-space-xs">
+              <div class="flex items-center gap-1.5 text-xs text-on-surface-variant">
+                <span class="hover:text-secondary cursor-pointer" onclick="switchTab(0)">Beranda</span>
+                <span class="material-symbols-outlined text-xs text-outline">chevron_right</span>
+                <span class="hover:text-secondary cursor-pointer">Pendapatan Asli Daerah</span>
+                <span class="material-symbols-outlined text-xs text-outline">chevron_right</span>
+                <span class="text-primary font-semibold">Tarif &amp; Penetapan Pajak</span>
+              </div>
+              <h1 class="text-xl md:text-2xl font-bold text-primary tracking-tight">
+                Konfigurasi Tarif Legal &amp; Penetapan Pajak / Retribusi Daerah
+              </h1>
+              <p class="text-xs md:text-sm text-on-surface-variant max-w-4xl">
+                Manajemen dasar hukum tarif daerah sesuai Perda No. 1/2024, tata kelola alur pengesahan bertingkat penerbitan SKP-D / SKR-D dengan verifikasi digital BSrE BSSN, dan penagihan kas daerah Kabupaten Tapanuli Utara.
+              </p>
+            </div>
+
+            <!-- Quick Action Group -->
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <button class="inline-flex items-center gap-2 h-11 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary text-xs md:text-sm font-semibold transition-all shadow-sm" id="btnOpenTarifModal" type="button">
+                <span class="material-symbols-outlined text-lg text-secondary">add_moderator</span>
+                <span>+ Tambah Tarif Legal</span>
+              </button>
+              <button class="inline-flex items-center gap-2 h-11 px-4 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-semibold transition-all shadow-md" id="btnOpenDraftModal" type="button">
+                <span class="material-symbols-outlined text-lg">post_add</span>
+                <span>+ Buat Draf Penetapan</span>
+              </button>
+              <button class="inline-flex items-center gap-2 h-11 px-4 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface text-xs md:text-sm font-semibold transition-all shadow-sm" id="btnExportData" type="button">
+                <span class="material-symbols-outlined text-lg text-outline">ios_share</span>
+                <span>Ekspor CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Performance Metric Ribbon -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-space-lg">
+            <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+              <div class="space-y-1">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Total Target Penetapan (2025)</span>
+                <div class="text-xl md:text-2xl font-bold text-primary font-mono">Rp 48.250.000.000</div>
+                <div class="text-xs text-on-surface-variant flex items-center gap-1">
+                  <span class="text-on-tertiary-container font-semibold">↑ 8.4%</span> dari TA 2024 (APBD Induk)
+                </div>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary">
+                <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+              <div class="space-y-1">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Realisasi Tagihan Terbayar</span>
+                <div class="text-xl md:text-2xl font-bold text-on-tertiary-container font-mono">Rp 28.140.750.000</div>
+                <div class="text-xs text-on-surface-variant flex items-center gap-1">
+                  <span class="font-semibold text-primary">58,32%</span> tercapai (Triwulan II)
+                </div>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-on-tertiary-container">
+                <span class="material-symbols-outlined text-2xl">check_circle</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+              <div class="space-y-1">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Menunggu Otorisasi TTE</span>
+                <div class="text-xl md:text-2xl font-bold text-secondary font-mono">14 Berkas</div>
+                <div class="text-xs text-on-surface-variant flex items-center gap-1">
+                  <span class="text-secondary font-semibold">6 Prioritas Tinggi</span> (&lt; 24 jam)
+                </div>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary">
+                <span class="material-symbols-outlined text-2xl">draw</span>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+              <div class="space-y-1">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Tarif Legal Aktif</span>
+                <div class="text-xl md:text-2xl font-bold text-primary font-mono">28 Aturan</div>
+                <div class="text-xs text-on-surface-variant">
+                  Dasar Perda No. 1/2024 &amp; Perbup
+                </div>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-2xl">gavel</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Navigation Segment -->
+          <div class="bg-surface-container-lowest p-1.5 rounded-xl shadow-sm flex flex-wrap items-center justify-between gap-space-md">
+            <div class="flex flex-wrap items-center gap-2">
+              <button class="tab-btn px-4 py-2.5 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 bg-secondary-container text-on-secondary shadow-sm transition-all" id="tabBillingBtn" type="button">
+                <span class="material-symbols-outlined text-base">receipt_long</span>
+                <span>Manajemen Tagihan &amp; SKPD</span>
+                <span class="px-2 py-0.5 rounded-full bg-on-secondary/20 font-mono text-[11px] text-on-secondary font-semibold">1.420</span>
+              </button>
+              <button class="tab-btn px-4 py-2.5 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tabWorkflowBtn" type="button">
+                <span class="material-symbols-outlined text-base">alt_route</span>
+                <span>Alur Penetapan Pajak (Workflow)</span>
+                <span class="px-2 py-0.5 rounded-full bg-surface-container font-mono text-[11px] text-on-surface-variant font-semibold">14 Draf</span>
+              </button>
+              <button class="tab-btn px-4 py-2.5 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tabRatesBtn" type="button">
+                <span class="material-symbols-outlined text-base">policy</span>
+                <span>Konfigurasi Tarif Legal</span>
+                <span class="px-2 py-0.5 rounded-full bg-surface-container font-mono text-[11px] text-on-surface-variant font-semibold">28 Aturan</span>
+              </button>
+            </div>
+            <div class="hidden lg:flex items-center gap-2 pr-space-md">
+              <span class="material-symbols-outlined text-on-tertiary-container text-base">gpp_good</span>
+              <span class="text-xs text-on-surface-variant">Kepmendagri 050/5889/2021 Compliant</span>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- VIEW 1: MANAJEMEN TAGIHAN & SKPD -->
+          <!-- ================================================================= -->
+          <div class="space-y-space-lg" id="viewBilling">
+            <!-- Search & Filter Toolbar -->
+            <div class="bg-surface-container-lowest p-4 md:p-space-lg rounded-xl shadow-sm space-y-space-md">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md">
+                <!-- Text Search Field -->
+                <div class="lg:col-span-4">
+                  <label class="block text-xs font-semibold text-on-surface-variant mb-1">Pencarian Nomor &amp; Subjek Pajak</label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-outline text-lg">search</span>
+                    <input id="tableSearchInput" class="w-full h-11 pl-10 pr-4 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface placeholder:text-outline-variant focus:outline-none focus:ring-2 focus:ring-secondary transition-all" placeholder="Ketik SKP-D, Kode VA, Nama WP, NOP..." type="text">
+                  </div>
+                </div>
+
+                <!-- Filter Jenis Penerimaan -->
+                <div class="lg:col-span-3">
+                  <label class="block text-xs font-semibold text-on-surface-variant mb-1">Jenis Penerimaan Daerah</label>
+                  <div class="relative">
+                    <select id="filterJenisSelect" class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface appearance-none focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer">
+                      <option value="">Semua Jenis Pajak &amp; Retribusi</option>
+                      <option value="hotel">PBJT - Jasa Perhotelan</option>
+                      <option value="restoran">PBJT - Restoran / Kafe</option>
+                      <option value="mblb">Pajak MBLB (Mineral Bukan Logam)</option>
+                      <option value="hiburan">PBJT - Kesenian &amp; Hiburan</option>
+                      <option value="pasar">Retribusi Pelayanan Pasar</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none text-outline text-base">unfold_more</span>
+                  </div>
+                </div>
+
+                <!-- Filter Status -->
+                <div class="lg:col-span-3">
+                  <label class="block text-xs font-semibold text-on-surface-variant mb-1">Status Penagihan</label>
+                  <div class="relative">
+                    <select id="filterStatusSelect" class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface appearance-none focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer">
+                      <option value="all">Semua Status (Aktif &amp; Arsip)</option>
+                      <option value="terbit">Terbit (Belum Bayar)</option>
+                      <option value="lunas">Lunas (Tervalidasi BPKAD)</option>
+                      <option value="kedaluwarsa">Kedaluwarsa (Jatuh Tempo)</option>
+                      <option value="dibatalkan">Dibatalkan Resmi (BAP)</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none text-outline text-base">unfold_more</span>
+                  </div>
+                </div>
+
+                <!-- Actions / Reset -->
+                <div class="lg:col-span-2 flex items-end gap-2">
+                  <button id="btnResetFilter" class="w-full h-11 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-xs md:text-sm font-semibold flex items-center justify-center gap-1.5 transition-all" type="button">
+                    <span class="material-symbols-outlined text-base">refresh</span>
+                    <span>Reset Filter</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter Tags -->
+              <div class="flex flex-wrap items-center gap-2 pt-space-xs text-xs text-on-surface-variant">
+                <span class="font-semibold text-primary">Kriteria Aktif:</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container font-mono text-[11px] text-on-surface">
+                  Wilayah: Seluruh Kecamatan Taput (15 Kec.)
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container font-mono text-[11px] text-on-surface">
+                  Tahun Pajak: 2025
+                </span>
+              </div>
+            </div>
+
+            <!-- Main Ledger Data Table -->
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-surface-container-low text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">
+                      <th class="py-3 px-space-lg w-12 text-center">
+                        <input id="selectAllBilling" class="w-4 h-4 rounded text-secondary focus:ring-0 cursor-pointer" type="checkbox">
+                      </th>
+                      <th class="py-3 px-space-md">Nomor Tagihan &amp; Kode Bayar</th>
+                      <th class="py-3 px-space-md">Nama Wajib Pajak &amp; Identitas Objek</th>
+                      <th class="py-3 px-space-md">Jenis Penerimaan Daerah</th>
+                      <th class="py-3 px-space-md">Masa Pajak</th>
+                      <th class="py-3 px-space-md text-right">Total Tagihan Pokok</th>
+                      <th class="py-3 px-space-md">Jatuh Tempo</th>
+                      <th class="py-3 px-space-md text-center">Status</th>
+                      <th class="py-3 px-space-lg text-right">Tindakan</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container text-xs md:text-sm text-on-surface">
+                    <!-- ROW 1: TERBIT (Hotel Grand Tarutung) -->
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-space-md px-space-lg text-center">
+                        <input class="w-4 h-4 rounded text-secondary focus:ring-0 cursor-pointer row-checkbox" type="checkbox">
+                      </td>
+                      <td class="py-space-md px-space-md font-mono">
+                        <div class="font-semibold text-primary">SKP-D/2025/0821</div>
+                        <div class="text-[11px] text-secondary flex items-center gap-1 mt-0.5">
+                          <span class="material-symbols-outlined text-xs">qr_code_2</span>
+                          <span>VA: 99012-0821-4412</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">PT Silindung Megah Mineral</div>
+                        <div class="text-on-surface-variant text-[11px] font-mono mt-0.5">NOP: 12.05.010.002.019-0021.0</div>
+                        <div class="text-on-surface-variant text-[11px]">Hotel Grand Tarutung • Tarutung Kota</div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">PBJT - Jasa Perhotelan</div>
+                        <div class="text-on-surface-variant text-[11px]">Rek. 4.1.01.06.01.0001 (Tarif 10%)</div>
+                      </td>
+                      <td class="py-space-md px-space-md font-mono text-[12px]">
+                        Mei 2025
+                        <div class="text-on-surface-variant text-[10px]">01/05 - 31/05/2025</div>
+                      </td>
+                      <td class="py-space-md px-space-md text-right font-mono font-semibold text-primary">
+                        Rp 48.750.000
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary font-mono text-[12px]">20 Jun 2025</div>
+                        <div class="inline-flex items-center gap-1 text-[10px] font-semibold text-secondary">
+                          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Sisa 6 Hari Lagi
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-secondary">
+                          <span class="material-symbols-outlined text-xs">schedule</span>
+                          <span>Terbit</span>
+                        </span>
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <div class="flex items-center justify-end gap-1">
+                          <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container btnViewDetail" title="Lihat Telaah Dokumen Lengkap" type="button">
+                            <span class="material-symbols-outlined text-lg">visibility</span>
+                          </button>
+                          <button onclick="window.print()" class="p-1.5 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container" title="Cetak Format Lembar SKP-D" type="button">
+                            <span class="material-symbols-outlined text-lg">print</span>
+                          </button>
+                          <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container btnCopyVA" data-va="99012-0821-4412" title="Salin Kode Bayar VA / QRIS" type="button">
+                            <span class="material-symbols-outlined text-lg">content_copy</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- ROW 2: LUNAS (CV Bonapasogit Batu Alam) -->
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-space-md px-space-lg text-center">
+                        <input class="w-4 h-4 rounded text-secondary focus:ring-0 cursor-pointer row-checkbox" type="checkbox">
+                      </td>
+                      <td class="py-space-md px-space-md font-mono">
+                        <div class="font-semibold text-primary">SKP-D/2025/0815</div>
+                        <div class="text-[11px] text-on-tertiary-container flex items-center gap-1 mt-0.5">
+                          <span class="material-symbols-outlined text-xs">verified</span>
+                          <span>NTPD: 250500192849</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">CV Bonapasogit Batu Alam</div>
+                        <div class="text-on-surface-variant text-[11px] font-mono mt-0.5">NOP: 12.05.040.001.004-0012.0</div>
+                        <div class="text-on-surface-variant text-[11px]">Tambang Pasir Pasir Batu • Sipoholon</div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">Pajak MBLB</div>
+                        <div class="text-on-surface-variant text-[11px]">Rek. 4.1.01.12.01.0002 (Rp 25.000/m³)</div>
+                      </td>
+                      <td class="py-space-md px-space-md font-mono text-[12px]">
+                        April 2025
+                        <div class="text-on-surface-variant text-[10px]">Volume 5.200 m³</div>
+                      </td>
+                      <td class="py-space-md px-space-md text-right font-mono font-semibold text-primary">
+                        Rp 130.000.000
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary font-mono text-[12px]">15 Mei 2025</div>
+                        <div class="inline-flex items-center gap-1 text-[10px] font-semibold text-on-tertiary-container">
+                          <span class="material-symbols-outlined text-xs">check</span> Lunas 12 Mei 2025
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-tertiary-container">
+                          <span class="material-symbols-outlined text-xs">task_alt</span>
+                          <span>Lunas</span>
+                        </span>
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <div class="flex items-center justify-end gap-1">
+                          <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container btnViewDetail" title="Lihat Surat Tanda Setoran (STS)" type="button">
+                            <span class="material-symbols-outlined text-lg">receipt</span>
+                          </button>
+                          <button onclick="window.print()" class="p-1.5 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container" title="Cetak Bukti Penerimaan Negara" type="button">
+                            <span class="material-symbols-outlined text-lg">print</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- ROW 3: KEDALUWARSA (Restoran Muara Nauli) -->
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-space-md px-space-lg text-center">
+                        <input class="w-4 h-4 rounded text-secondary focus:ring-0 cursor-pointer row-checkbox" type="checkbox">
+                      </td>
+                      <td class="py-space-md px-space-md font-mono">
+                        <div class="font-semibold text-primary">SKP-D/2025/0798</div>
+                        <div class="text-[11px] text-error flex items-center gap-1 mt-0.5">
+                          <span class="material-symbols-outlined text-xs">warning</span>
+                          <span>VA Expired: 99012-0798-2011</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">Restoran &amp; Kafe Muara Nauli</div>
+                        <div class="text-on-surface-variant text-[11px] font-mono mt-0.5">NOP: 12.05.080.003.001-0089.0</div>
+                        <div class="text-on-surface-variant text-[11px]">Dermaga Danau Toba • Kec. Muara</div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">PBJT - Restoran / Kafe</div>
+                        <div class="text-on-surface-variant text-[11px]">Rek. 4.1.01.07.01.0003 (Tarif 10%)</div>
+                      </td>
+                      <td class="py-space-md px-space-md font-mono text-[12px]">
+                        Maret 2025
+                        <div class="text-on-surface-variant text-[10px]">01/03 - 31/03/2025</div>
+                      </td>
+                      <td class="py-space-md px-space-md text-right font-mono font-semibold text-primary">
+                        Rp 14.820.000
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-error font-mono text-[12px]">25 Apr 2025</div>
+                        <div class="inline-flex items-center gap-1 text-[10px] font-semibold text-error">
+                          <span class="material-symbols-outlined text-xs">history_toggle_off</span> Lewat 50 Hari (+Bunga 1%)
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-error">
+                          <span class="material-symbols-outlined text-xs">event_busy</span>
+                          <span>Kedaluwarsa</span>
+                        </span>
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <div class="flex items-center justify-end gap-1">
+                          <button onclick="showToast('Surat Teguran resmi (STPD) telah dikirimkan ke WP.', 'info')" class="p-1.5 rounded-lg text-secondary hover:bg-surface-container" title="Terbitkan Surat Teguran (STPD)" type="button">
+                            <span class="material-symbols-outlined text-lg">forward_to_inbox</span>
+                          </button>
+                          <button onclick="showToast('Kalkulasi bunga 1%/bulan: Denda akumulasi Rp 148.200')" class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container" title="Hitung Denda Kompensasi" type="button">
+                            <span class="material-symbols-outlined text-lg">calculate</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- ROW 4: DIBATALKAN RESMI -->
+                    <tr class="bg-surface-container-low/40 hover:bg-surface-container-low transition-colors">
+                      <td class="py-space-md px-space-lg text-center">
+                        <input class="w-4 h-4 rounded text-secondary focus:ring-0 cursor-pointer row-checkbox" type="checkbox">
+                      </td>
+                      <td class="py-space-md px-space-md font-mono">
+                        <div class="font-semibold line-through text-outline">SKP-D/2025/0790</div>
+                        <div class="text-[11px] text-error flex items-center gap-1 mt-0.5">
+                          <span class="material-symbols-outlined text-xs">block</span>
+                          <span>SK Pembatalan: 973/140/Bapenda</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-on-surface-variant line-through">CV Sarulla Rekreasi Alam</div>
+                        <div class="text-outline text-[11px] font-mono mt-0.5">NOP: 12.05.120.004.009-0015.0</div>
+                        <div class="text-outline text-[11px]">Pemandian Air Soda • Pahae Jae</div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-on-surface-variant">PBJT - Jasa Kesenian &amp; Hiburan</div>
+                        <div class="text-outline text-[11px]">Rek. 4.1.01.08.01.0001 (Tarif 10%)</div>
+                      </td>
+                      <td class="py-space-md px-space-md font-mono text-[12px] text-outline">
+                        Februari 2025
+                        <div class="text-outline text-[10px]">Koreksi Ganda Lapangan</div>
+                      </td>
+                      <td class="py-space-md px-space-md text-right font-mono font-semibold text-outline line-through">
+                        Rp 8.900.000
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="text-outline font-mono text-[12px]">Dibatalkan 18 Apr 2025</div>
+                        <div class="text-[10px] text-error font-medium truncate max-w-[140px]" title="Koreksi data omzet ganda hasil audit ulang pemeriksaan lapangan">
+                          Ket: Koreksi BAP Audit Ulang
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-error">
+                          <span class="material-symbols-outlined text-xs">cancel</span>
+                          <span>Dibatalkan</span>
+                        </span>
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <div class="flex items-center justify-end gap-1">
+                          <button onclick="showToast('Berita Acara Pembatalan No. 48/BAP/2025 terarsip.', 'info')" class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container" title="Lihat Berita Acara Pembatalan (BAP)" type="button">
+                            <span class="material-symbols-outlined text-lg">policy</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- ROW 5: TERBIT (Kios Pasar Siborong-borong) -->
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-space-md px-space-lg text-center">
+                        <input class="w-4 h-4 rounded text-secondary focus:ring-0 cursor-pointer row-checkbox" type="checkbox">
+                      </td>
+                      <td class="py-space-md px-space-md font-mono">
+                        <div class="font-semibold text-primary">SKR-D/2025/0312</div>
+                        <div class="text-[11px] text-secondary flex items-center gap-1 mt-0.5">
+                          <span class="material-symbols-outlined text-xs">qr_code_2</span>
+                          <span>VA: 99012-0312-7789</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">Toko Kelontong Mora Nainggolan</div>
+                        <div class="text-on-surface-variant text-[11px] font-mono mt-0.5">ID Retribusi: RET-PSR-SBR-044</div>
+                        <div class="text-on-surface-variant text-[11px]">Blok B No. 14 Pasar Siborongborong</div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary">Retribusi Pelayanan Pasar</div>
+                        <div class="text-on-surface-variant text-[11px]">Rek. 4.1.02.01.01.0001 (Rp 150.000/Bln)</div>
+                      </td>
+                      <td class="py-space-md px-space-md font-mono text-[12px]">
+                        Mei 2025
+                        <div class="text-on-surface-variant text-[10px]">1 Unit Kios Permanen</div>
+                      </td>
+                      <td class="py-space-md px-space-md text-right font-mono font-semibold text-primary">
+                        Rp 150.000
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div class="font-semibold text-primary font-mono text-[12px]">30 Jun 2025</div>
+                        <div class="inline-flex items-center gap-1 text-[10px] font-semibold text-secondary">
+                          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Sisa 16 Hari
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-secondary">
+                          <span class="material-symbols-outlined text-xs">schedule</span>
+                          <span>Terbit</span>
+                        </span>
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <div class="flex items-center justify-end gap-1">
+                          <button class="btnCancelTrigger p-1.5 rounded-lg text-error hover:bg-error-container/40" title="Batalkan Tagihan" type="button">
+                            <span class="material-symbols-outlined text-lg">cancel</span>
+                          </button>
+                          <button onclick="window.print()" class="p-1.5 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container" title="Cetak Kartu Retribusi" type="button">
+                            <span class="material-symbols-outlined text-lg">print</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination Footer -->
+              <div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md text-xs text-on-surface-variant">
+                <div class="flex items-center gap-space-sm">
+                  <span>Menampilkan <strong>1 - 5</strong> dari <strong>1.420</strong> dokumen</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button class="px-3 py-1.5 rounded bg-surface-container-lowest text-on-surface-variant hover:text-primary disabled:opacity-40" disabled>Sebelumnya</button>
+                  <button class="px-3 py-1.5 rounded bg-primary text-on-primary font-semibold">1</button>
+                  <button class="px-3 py-1.5 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container">2</button>
+                  <button class="px-3 py-1.5 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container">3</button>
+                  <button class="px-3 py-1.5 rounded bg-surface-container-lowest text-on-surface-variant hover:text-primary">Berikutnya</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- VIEW 2: ALUR PENETAPAN PAJAK (Workflow) -->
+          <!-- ================================================================= -->
+          <div class="hidden space-y-space-lg" id="viewWorkflow">
+            <div class="bg-surface-container-lowest p-4 md:p-space-xl rounded-xl shadow-sm space-y-space-lg">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-space-sm">
+                <div>
+                  <span class="text-xs uppercase tracking-wider text-secondary font-bold">Standard Operating Procedure (SOP)</span>
+                  <h2 class="text-lg md:text-xl font-bold text-primary">Siklus Penetapan Resmi SKP-D / SKR-D Bertingkat</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="px-3 py-1 rounded-full bg-surface-container text-xs text-on-surface">
+                    Perbup No. 12 Tahun 2024 Bab IV
+                  </span>
+                </div>
+              </div>
+
+              <!-- Visual Stepper Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-space-md relative">
+                <!-- Step 1 -->
+                <div class="bg-surface-container-low p-space-lg rounded-xl flex flex-col justify-between">
+                  <div class="space-y-space-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="font-mono text-xs font-bold text-secondary">TAHAP 01</span>
+                      <span class="material-symbols-outlined text-secondary">fact_check</span>
+                    </div>
+                    <h3 class="font-semibold text-primary text-sm">Draf &amp; Verifikasi SPTD</h3>
+                    <p class="text-xs text-on-surface-variant">Pemeriksaan omzet, kesesuaian dokumen bukti faktur belanja oleh Petugas Verifikator.</p>
+                  </div>
+                  <div class="mt-4 pt-2 text-xs text-on-surface-variant flex items-center gap-1 border-t border-surface-container">
+                    <span class="material-symbols-outlined text-xs text-on-tertiary-container">done_all</span> Verifikator Lapangan
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-surface-container-low p-space-lg rounded-xl flex flex-col justify-between">
+                  <div class="space-y-space-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="font-mono text-xs font-bold text-secondary">TAHAP 02</span>
+                      <span class="material-symbols-outlined text-secondary">engineering</span>
+                    </div>
+                    <h3 class="font-semibold text-primary text-sm">Telaah &amp; Validasi Kasi</h3>
+                    <p class="text-xs text-on-surface-variant">Penyesuaian dasar hukum tarif, cek piutang masa lalu oleh Kasi Penetapan PAD.</p>
+                  </div>
+                  <div class="mt-4 pt-2 text-xs text-on-surface-variant flex items-center gap-1 border-t border-surface-container">
+                    <span class="material-symbols-outlined text-xs text-secondary">pending</span> Kasi Penetapan PAD
+                  </div>
+                </div>
+
+                <!-- Step 3: Focus Node -->
+                <div class="bg-surface-container-high p-space-lg rounded-xl flex flex-col justify-between shadow-sm border border-secondary/30">
+                  <div class="space-y-space-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="font-mono text-xs font-bold text-secondary">TAHAP 03</span>
+                      <span class="material-symbols-outlined text-secondary animate-pulse">lock</span>
+                    </div>
+                    <h3 class="font-semibold text-primary text-sm">Otorisasi TTE BSrE</h3>
+                    <p class="text-xs text-on-surface-variant">Penandatanganan elektronik tersertifikasi BSSN oleh Kepala Bidang PAD.</p>
+                  </div>
+                  <div id="tteStatusStep3" class="mt-4 pt-2 text-xs font-semibold text-primary flex items-center gap-1 border-t border-surface-container">
+                    <span class="material-symbols-outlined text-xs text-secondary">key</span> Siap Otorisasi (BSrE)
+                  </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-surface-container-low p-space-lg rounded-xl flex flex-col justify-between">
+                  <div class="space-y-space-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="font-mono text-xs font-bold text-secondary">TAHAP 04</span>
+                      <span class="material-symbols-outlined text-secondary">payments</span>
+                    </div>
+                    <h3 class="font-semibold text-primary text-sm">Terbit SKP-D &amp; Billing</h3>
+                    <p class="text-xs text-on-surface-variant">Nomor ketetapan aktif. Kode Bayar Virtual Account &amp; QRIS Bank Sumut siap dibayarkan.</p>
+                  </div>
+                  <div class="mt-4 pt-2 text-xs text-on-surface-variant flex items-center gap-1 border-t border-surface-container">
+                    <span class="material-symbols-outlined text-xs">link</span> Host-to-Host Kas Daerah
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Case Dossier Details -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+              <!-- Left: Dossier Breakdown -->
+              <div class="lg:col-span-8 bg-surface-container-lowest p-4 md:p-space-xl rounded-xl shadow-sm space-y-space-lg">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pb-space-md border-b border-surface-container">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full bg-surface-container font-mono text-[11px] font-bold text-secondary">DOKUMEN RESMI</span>
+                      <span class="text-on-surface-variant font-mono text-xs">No. Agenda: BAP/2025/V/019</span>
+                    </div>
+                    <h2 class="text-base md:text-lg font-bold text-primary">SKP-D/2025/0821 — PT Silindung Megah Mineral</h2>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="text-xs text-on-surface-variant uppercase">Total Pokok Pajak</span>
+                    <div class="text-xl font-bold text-primary font-mono">Rp 48.750.000</div>
+                  </div>
+                </div>
+
+                <!-- Metadata Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md bg-surface-container-low p-space-lg rounded-xl text-xs md:text-sm">
+                  <div class="space-y-space-xs">
+                    <span class="text-xs text-on-surface-variant font-semibold">Subjek / Wajib Pajak:</span>
+                    <p class="font-bold text-primary">PT Silindung Megah Mineral</p>
+                    <p class="font-mono text-xs text-on-surface-variant">NPWPD: P.2.0019284.14.02</p>
+                  </div>
+                  <div class="space-y-space-xs">
+                    <span class="text-xs text-on-surface-variant font-semibold">Objek Pajak Daerah:</span>
+                    <p class="font-bold text-primary">Hotel Grand Tarutung</p>
+                    <p class="font-mono text-xs text-on-surface-variant">NOP: 12.05.010.002.019-0021.0</p>
+                  </div>
+                  <div class="space-y-space-xs">
+                    <span class="text-xs text-on-surface-variant font-semibold">Masa &amp; Tahun Pajak:</span>
+                    <p class="font-semibold text-primary">01 Mei 2025 s.d 31 Mei 2025 (TA 2025)</p>
+                  </div>
+                  <div class="space-y-space-xs">
+                    <span class="text-xs text-on-surface-variant font-semibold">Petugas Pemeriksa:</span>
+                    <p class="font-semibold text-primary">Togar Simanjuntak, S.E.</p>
+                  </div>
+                </div>
+
+                <!-- Tax Basis Table -->
+                <div class="space-y-space-sm">
+                  <h4 class="font-bold text-sm text-primary">Perhitungan Dasar Pengenaan Pajak (Taxable Basis)</h4>
+                  <div class="bg-surface-container-lowest rounded-lg overflow-x-auto">
+                    <table class="w-full text-left text-xs md:text-sm">
+                      <thead>
+                        <tr class="bg-surface-container-low text-on-surface-variant font-semibold uppercase text-[11px]">
+                          <th class="py-2.5 px-4">Komponen Objek Perhotelan</th>
+                          <th class="py-2.5 px-4 text-right">Omzet Bruto (Rp)</th>
+                          <th class="py-2.5 px-4 text-center">Tarif</th>
+                          <th class="py-2.5 px-4 text-right">Nilai Ketetapan (Rp)</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-surface-container">
+                        <tr>
+                          <td class="py-2.5 px-4">Kamar Deluxe, Suite &amp; Cottage (48 Kamar)</td>
+                          <td class="py-2.5 px-4 text-right font-mono">324.500.000</td>
+                          <td class="py-2.5 px-4 text-center font-mono">10%</td>
+                          <td class="py-2.5 px-4 text-right font-mono font-semibold">32.450.000</td>
+                        </tr>
+                        <tr>
+                          <td class="py-2.5 px-4">Penyewaan Ruang Rapat &amp; Ballroom</td>
+                          <td class="py-2.5 px-4 text-right font-mono">112.000.000</td>
+                          <td class="py-2.5 px-4 text-center font-mono">10%</td>
+                          <td class="py-2.5 px-4 text-right font-mono font-semibold">11.200.000</td>
+                        </tr>
+                        <tr>
+                          <td class="py-2.5 px-4">Restoran &amp; Layanan Room Service</td>
+                          <td class="py-2.5 px-4 text-right font-mono">51.000.000</td>
+                          <td class="py-2.5 px-4 text-center font-mono">10%</td>
+                          <td class="py-2.5 px-4 text-right font-mono font-semibold">5.100.000</td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr class="bg-surface-container-low font-bold text-primary">
+                          <td class="py-3 px-4">Jumlah DPP</td>
+                          <td class="py-3 px-4 text-right font-mono">487.500.000</td>
+                          <td class="py-3 px-4 text-center text-xs">Pasal 18 Perda 1/2024</td>
+                          <td class="py-3 px-4 text-right font-mono text-secondary">48.750.000</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Bottom Action Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-space-md pt-space-md border-t border-surface-container">
+                  <div class="flex items-center gap-2 text-on-surface-variant text-xs">
+                    <span class="material-symbols-outlined text-on-tertiary-container text-base">verified</span>
+                    <span>Dokumen diverifikasi tanpa catatan selisih audit.</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button onclick="showToast('Draf dikembalikan ke Verifikator untuk penelaahan ulang.', 'info')" class="px-4 h-10 rounded-lg bg-surface-container hover:bg-surface-container-high text-error text-xs md:text-sm font-semibold" type="button">
+                      Kembalikan Draf (Revisi)
+                    </button>
+                    <button id="btnOpenTteModal" class="px-4 h-10 rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary text-xs md:text-sm font-semibold flex items-center gap-1.5 shadow-sm" type="button">
+                      <span class="material-symbols-outlined text-base">draw</span>
+                      <span>Otorisasi &amp; Terbitkan TTE</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Riwayat Audit -->
+              <div class="lg:col-span-4 bg-surface-container-lowest p-4 md:p-space-xl rounded-xl shadow-sm space-y-space-lg">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-bold text-sm text-primary">Riwayat Audit Otorisasi</h3>
+                  <span class="px-2 py-0.5 rounded bg-surface-container font-mono text-[10px] text-on-surface font-semibold">TTE-BSrE</span>
+                </div>
+
+                <div class="relative pl-6 space-y-space-lg before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-surface-container">
+                  <div class="relative">
+                    <div class="absolute -left-[27px] top-1 w-4 h-4 rounded-full bg-on-tertiary-container ring-4 ring-surface-container-lowest"></div>
+                    <div class="space-y-0.5 text-xs">
+                      <span class="font-semibold text-primary">Verifikasi Draf SPTPD</span>
+                      <p class="text-on-surface-variant">Togar Simanjuntak, S.E. (Verifikator)</p>
+                      <div class="font-mono text-[10px] text-outline">06 Jun 2025 • 09:15 WIB</div>
+                    </div>
+                  </div>
+
+                  <div class="relative">
+                    <div class="absolute -left-[27px] top-1 w-4 h-4 rounded-full bg-on-tertiary-container ring-4 ring-surface-container-lowest"></div>
+                    <div class="space-y-0.5 text-xs">
+                      <span class="font-semibold text-primary">Telaah Regulasi Kasi</span>
+                      <p class="text-on-surface-variant">Marlina Hutabarat, S.Sos (Kasi Penetapan)</p>
+                      <div class="font-mono text-[10px] text-outline">06 Jun 2025 • 14:02 WIB</div>
+                    </div>
+                  </div>
+
+                  <div class="relative">
+                    <div class="absolute -left-[27px] top-1 w-4 h-4 rounded-full bg-secondary animate-ping ring-4 ring-surface-container-lowest"></div>
+                    <div class="space-y-0.5 text-xs">
+                      <span class="font-semibold text-secondary">Menunggu Otorisasi Kabid PAD</span>
+                      <p class="text-primary font-medium">Drs. Bambang Hermanto, M.Si</p>
+                      <div class="font-mono text-[10px] text-secondary">Antrean TTE BSrE aktif</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-surface-container-low p-space-md rounded-xl space-y-space-xs text-xs">
+                  <div class="flex items-center gap-2 text-primary font-semibold">
+                    <span class="material-symbols-outlined text-on-tertiary-container text-lg">verified_user</span>
+                    <span>Sertifikasi TTE BSrE BSSN</span>
+                  </div>
+                  <p class="text-on-surface-variant text-[11px] leading-relaxed">
+                    Dokumen ini akan diterbitkan dengan tanda tangan digital terenkripsi SHA-256 yang sah secara hukum.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================= -->
+          <!-- VIEW 3: KONFIGURASI TARIF LEGAL -->
+          <!-- ================================================================= -->
+          <div class="hidden space-y-space-lg" id="viewRates">
+            <div class="bg-surface-container-low p-space-lg rounded-xl flex items-start gap-space-md shadow-sm">
+              <span class="material-symbols-outlined text-secondary text-2xl shrink-0 mt-0.5">shield_with_heart</span>
+              <div class="space-y-1">
+                <h4 class="font-bold text-sm text-primary">Aturan Keamanan Fiskal Daerah (Fiscal Lock Guarantee)</h4>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  Perubahan nilai tarif legal hanya berlaku untuk penerbitan ketetapan pajak masa berikutnya. Sistem secara otomatis <strong>mengunci (lock)</strong> seluruh SKP-D yang telah terbit sebelumnya agar mematuhi asas kepastian hukum perpajakan daerah dan standar audit BPK-RI.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden space-y-space-md p-4 md:p-space-lg">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+                <div>
+                  <h3 class="font-bold text-sm md:text-base text-primary">Daftar Regulasi Tarif Pajak &amp; Retribusi Aktif</h3>
+                  <span class="text-xs text-on-surface-variant">Payung Hukum: Perda Kab. Tapanuli Utara No. 1 Tahun 2024</span>
+                </div>
+                <button class="inline-flex items-center gap-2 h-10 px-space-md rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold transition-all shadow-sm" id="btnOpenTarifModal2" type="button">
+                  <span class="material-symbols-outlined text-base">add</span>
+                  <span>Tambah Tarif Baru</span>
+                </button>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs md:text-sm">
+                  <thead>
+                    <tr class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold uppercase tracking-wider">
+                      <th class="py-3 px-4">Kode Akun Rekening</th>
+                      <th class="py-3 px-4">Jenis Penerimaan Daerah</th>
+                      <th class="py-3 px-4">Tipe Skema Tarif</th>
+                      <th class="py-3 px-4 text-center">Besaran Tarif</th>
+                      <th class="py-3 px-4">Masa Berlaku</th>
+                      <th class="py-3 px-4">Dasar Hukum Resmi</th>
+                      <th class="py-3 px-4 text-center">Status</th>
+                      <th class="py-3 px-4 text-right">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container">
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-3 px-4 font-mono font-semibold text-primary">4.1.01.06.01.0001</td>
+                      <td class="py-3 px-4">
+                        <div class="font-semibold text-primary">PBJT - Jasa Perhotelan</div>
+                        <div class="text-[11px] text-on-surface-variant">Hotel bintang, wisma, losmen</div>
+                      </td>
+                      <td class="py-3 px-4">Persentase (%)</td>
+                      <td class="py-3 px-4 text-center font-mono font-bold text-primary">10,00%</td>
+                      <td class="py-3 px-4 font-mono text-xs">01 Jan 2024 - Seterusnya</td>
+                      <td class="py-3 px-4 text-xs text-on-surface-variant">Perda No. 1/2024 (Pasal 18)</td>
+                      <td class="py-3 px-4 text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-tertiary-container">
+                          <span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                          <span>Aktif</span>
+                        </span>
+                      </td>
+                      <td class="py-3 px-4 text-right">
+                        <button onclick="showToast('Parameter tarif terkunci fiskal.', 'info')" class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container" type="button">
+                          <span class="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-3 px-4 font-mono font-semibold text-primary">4.1.01.12.01.0002</td>
+                      <td class="py-3 px-4">
+                        <div class="font-semibold text-primary">Pajak MBLB (Batu Kapur &amp; Sirtu)</div>
+                        <div class="text-[11px] text-on-surface-variant">Eksploitasi mineral bukan logam &amp; batuan</div>
+                      </td>
+                      <td class="py-3 px-4">Per Satuan Volume (m³)</td>
+                      <td class="py-3 px-4 text-center font-mono font-bold text-primary">Rp 25.000 / m³</td>
+                      <td class="py-3 px-4 font-mono text-xs">01 Jan 2024 - 31 Des 2026</td>
+                      <td class="py-3 px-4 text-xs text-on-surface-variant">Perda No. 1/2024 Lampiran IV</td>
+                      <td class="py-3 px-4 text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-tertiary-container">
+                          <span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                          <span>Aktif</span>
+                        </span>
+                      </td>
+                      <td class="py-3 px-4 text-right">
+                        <button onclick="showToast('Parameter tarif terkunci fiskal.', 'info')" class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container" type="button">
+                          <span class="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr class="hover:bg-surface-container-low/60 transition-colors">
+                      <td class="py-3 px-4 font-mono font-semibold text-primary">4.1.02.01.01.0001</td>
+                      <td class="py-3 px-4">
+                        <div class="font-semibold text-primary">Retribusi Pelayanan Pasar (Kios Permanen)</div>
+                        <div class="text-[11px] text-on-surface-variant">Pasar Tarutung, Siborongborong, Sarulla</div>
+                      </td>
+                      <td class="py-3 px-4">Tetap (Fixed / Bulan)</td>
+                      <td class="py-3 px-4 text-center font-mono font-bold text-primary">Rp 150.000 / unit</td>
+                      <td class="py-3 px-4 font-mono text-xs">01 Jan 2024 - Seterusnya</td>
+                      <td class="py-3 px-4 text-xs text-on-surface-variant">Perda No. 1/2024 Pasal 62 Ayat (3)</td>
+                      <td class="py-3 px-4 text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-tertiary-container">
+                          <span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                          <span>Aktif</span>
+                        </span>
+                      </td>
+                      <td class="py-3 px-4 text-right">
+                        <button onclick="showToast('Parameter tarif terkunci fiskal.', 'info')" class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-container" type="button">
+                          <span class="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- FLOATING BATCH ACTION BAR -->
+  <!-- ================================================================= -->
+  <div id="batchActionBar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden bg-primary text-on-primary px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-4 transition-all duration-300">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-secondary-fixed">checklist</span>
+      <span id="batchCountText" class="text-xs md:text-sm font-semibold">0 Dokumen Dipilih</span>
+    </div>
+    <div class="h-4 w-px bg-white/20"></div>
+    <div class="flex items-center gap-2">
+      <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary text-xs font-semibold flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">print</span>
+        <span>Cetak Masal</span>
+      </button>
+      <button onclick="showToast('Notifikasi tagihan SMS/WA dikirimkan ke WP terpilih.')" class="px-3 py-1.5 rounded-lg bg-surface-container-low/20 hover:bg-surface-container-low/30 text-white text-xs font-semibold flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">send</span>
+        <span>Kirim Pengingat</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 1: BUAT DRAF PENETAPAN BARU -->
+  <!-- ================================================================= -->
+  <div class="fixed inset-0 z-50 hidden bg-primary/50 backdrop-blur-sm flex items-center justify-center p-4" id="modalDraft">
+    <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-between border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-secondary-container text-on-secondary flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">post_add</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm md:text-base text-primary">Buat Draf Penetapan Pajak / Retribusi Baru</h3>
+            <span class="text-xs text-on-surface-variant">Penerbitan surat ketetapan SKP-D / SKR-D Kabupaten Tapanuli Utara</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" id="btnCloseDraftModal" type="button">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="formDraftPenetapan" class="p-space-xl space-y-space-md max-h-[75vh] overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Nomor Objek Pajak (NOP / ID Objek)</label>
+            <input id="draftNop" class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface font-mono focus:outline-none focus:ring-2 focus:ring-secondary" value="12.05.010.005.002-0045.0" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Nama Wajib Pajak / Badan Usaha</label>
+            <input id="draftWpName" class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface font-semibold focus:outline-none focus:ring-2 focus:ring-secondary" value="Restoran & Bakery Nauli Tarutung" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Jenis Penerimaan Daerah</label>
+            <select id="draftTarifSelect" class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary">
+              <option value="10">PBJT - Makanan dan Minuman / Restoran (10%)</option>
+              <option value="10">PBJT - Jasa Perhotelan (10%)</option>
+              <option value="10">PBJT - Jasa Kesenian &amp; Hiburan (10%)</option>
+              <option value="15">Pajak Reklame Papan/Megatron (15%)</option>
+              <option value="5">Retribusi Pasar &amp; Kebersihan (Fixed)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Masa Pajak</label>
+            <input class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" value="Juni 2025 (TA 2025)">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Dasar Pengenaan Pajak (DPP / Omzet)</label>
+            <div class="relative">
+              <span class="absolute left-3 top-3 text-xs text-on-surface-variant font-mono">Rp</span>
+              <input id="draftDppInput" class="w-full h-11 pl-9 pr-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface font-mono font-bold focus:outline-none focus:ring-2 focus:ring-secondary" value="35.000.000">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Estimasi Nilai Ketetapan Pokok</label>
+            <div class="w-full h-11 px-3 bg-secondary/10 border border-secondary/30 rounded-lg flex items-center justify-between">
+              <span class="text-xs text-secondary font-semibold">Total Pajak:</span>
+              <span id="draftTotalOutput" class="text-sm font-bold text-secondary font-mono">Rp 3.500.000</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-on-surface-variant mb-1">Catatan Hasil Pemeriksaan Verifikator</label>
+          <textarea class="w-full p-3 bg-surface-container-low rounded-lg text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" rows="2" placeholder="Catatan kesesuaian omzet kas harian dan bukti transaksi..."></textarea>
+        </div>
+
+        <div class="px-space-xl py-space-md -mx-space-xl -mb-space-xl bg-surface-container-low flex items-center justify-end gap-space-sm border-t border-surface-container">
+          <button class="px-space-lg h-11 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-xs md:text-sm font-semibold" id="btnCancelDraftModal" type="button">
+            Batal
+          </button>
+          <button class="px-space-lg h-11 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-semibold shadow-sm" type="submit">
+            Simpan &amp; Terbitkan Draf
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 2: KONFIGURASI TARIF LEGAL -->
+  <!-- ================================================================= -->
+  <div class="fixed inset-0 z-50 hidden bg-primary/40 backdrop-blur-sm flex items-center justify-center p-4" id="modalTarif">
+    <div class="bg-surface-container-lowest rounded-xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-between border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined text-lg">gavel</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm md:text-base text-primary">Konfigurasi Tarif Legal Baru</h3>
+            <span class="text-xs text-on-surface-variant">Penetapan parameter tarif sesuai Peraturan Daerah No. 1/2024</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" id="btnCloseTarifModal" type="button">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <div class="p-space-xl space-y-space-md">
+        <div class="p-3 rounded-lg bg-surface-container-low flex items-start gap-2.5">
+          <span class="material-symbols-outlined text-secondary text-lg mt-0.5">info</span>
+          <p class="text-xs text-on-surface-variant leading-tight">
+            <strong>Fiscal Lock Guarantee:</strong> Perubahan tarif hanya berlaku untuk penetapan masa pajak berikutnya, tidak mengubah SKP-D terbit sebelumnya.
+          </p>
+        </div>
+
+        <div class="space-y-space-sm">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Jenis Penerimaan Daerah (Akun Akuntansi)</label>
+            <select class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary">
+              <option>PBJT - Jasa Perhotelan (4.1.01.06.01.0001)</option>
+              <option>PBJT - Makanan dan/atau Minuman (4.1.01.07.01.0001)</option>
+              <option>Pajak Mineral Bukan Logam dan Batuan (4.1.01.12.01.0002)</option>
+              <option>PBB-P2 Perkotaan dan Perdesaan (4.1.01.14.01.0001)</option>
+              <option>Retribusi Pelayanan Pasar (4.1.02.01.01.0001)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+            <div>
+              <label class="block text-xs font-semibold text-on-surface-variant mb-1">Tipe Skema Tarif</label>
+              <select class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary">
+                <option>Persentase (%)</option>
+                <option>Tetap (Fixed Nominal Rupiah)</option>
+                <option>Per Satuan Volume / Luas (m³ / m²)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-on-surface-variant mb-1">Nilai / Angka Tarif</label>
+              <div class="relative">
+                <input class="w-full h-11 px-3 bg-surface-container-low rounded-lg font-mono font-semibold text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" type="text" value="10,00">
+                <span class="absolute right-3 top-3 text-on-surface-variant font-mono text-xs">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Dasar Hukum &amp; Nomor Regulasi</label>
+            <input class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" type="text" value="Perda Kab. Tapanuli Utara No. 1 Tahun 2024 tentang Pajak Daerah dan Retribusi Daerah">
+          </div>
+        </div>
+      </div>
+
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-end gap-space-sm border-t border-surface-container">
+        <button class="px-space-lg h-11 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-xs md:text-sm font-semibold" id="btnCancelTarifModal" type="button">
+          Batal
+        </button>
+        <button class="px-space-lg h-11 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-semibold shadow-sm" id="btnSaveTarifModal" type="button">
+          Simpan Konfigurasi Tarif
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 3: KONFIRMASI PEMBATALAN TAGIHAN -->
+  <!-- ================================================================= -->
+  <div class="fixed inset-0 z-50 hidden bg-primary/50 backdrop-blur-sm flex items-center justify-center p-4" id="modalCancel">
+    <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-space-xl py-space-md bg-error-container/40 flex items-center justify-between border-b border-error-container">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-lg bg-error-container flex items-center justify-center text-error">
+            <span class="material-symbols-outlined text-xl">warning</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm md:text-base text-error">Konfirmasi Pembatalan Tagihan Resmi</h3>
+            <span class="font-mono text-xs font-semibold text-on-error-container">Pencatatan Berita Acara Pemeriksaan (BAP)</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" id="btnCloseCancelModal" type="button">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <div class="p-space-xl space-y-space-md">
+        <div class="p-space-md rounded-xl bg-error-container/20 border-l-4 border-error text-on-surface space-y-1">
+          <div class="text-xs font-bold text-error flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">security</span>
+            <span>Peringatan Audit Forensik &amp; Inspektorat Daerah:</span>
+          </div>
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            Pembatalan nomor tagihan ini bersifat <strong>permanen</strong> dan dicatat ke dalam Jejak Audit Sistem Informasi Pemerintahan Daerah.
+          </p>
+        </div>
+
+        <div class="space-y-space-sm pt-1">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Pilih Kategori Alasan Pembatalan Resmi</label>
+            <select class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-xs md:text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-error cursor-pointer">
+              <option selected>Koreksi Data Omzet Ganda (Double Billing Hasil Audit Lapangan)</option>
+              <option>Putusan Keberatan / Banding Pajak Daerah Diterima</option>
+              <option>Objek Pajak Telah Tutup Permanen Sebelum Masa Pajak Dimulai</option>
+              <option>Kesalahan Input NOP / NPWPD oleh Petugas Verifikator</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1">Catatan Pertimbangan / Nomor BAP</label>
+            <textarea class="w-full p-3 bg-surface-container-low rounded-lg text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-error" rows="2">Koreksi audit ulang pemeriksaan lapangan Bapenda Taput Nomor 48/BAP/2025.</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-end gap-space-sm border-t border-surface-container">
+        <button class="px-space-lg h-11 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-xs md:text-sm font-semibold" id="btnDismissCancelModal" type="button">
+          Kembalikan (Batal)
+        </button>
+        <button class="px-space-lg h-11 rounded-lg bg-error hover:bg-error/90 text-on-error text-xs md:text-sm font-semibold shadow-md flex items-center gap-1.5" id="btnConfirmCancelModal" type="button">
+          <span class="material-symbols-outlined text-base">block</span>
+          <span>Konfirmasi Batalkan Tagihan</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 4: TELAAH DOKUMEN SKP-D LENGKAP -->
+  <!-- ================================================================= -->
+  <div class="fixed inset-0 z-50 hidden bg-primary/50 backdrop-blur-sm flex items-center justify-center p-4" id="modalDetail">
+    <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-between border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-primary-container text-on-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">receipt_long</span>
+          </div>
+          <div>
+            <h3 id="detailSkpdTitle" class="font-bold text-sm md:text-base text-primary">SKP-D/2025/0821</h3>
+            <span class="text-xs text-on-surface-variant">Lembar Salinan Ketetapan Pajak Daerah Kabupaten Tapanuli Utara</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" id="btnCloseDetailModal" type="button">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <div class="p-space-xl space-y-space-md max-h-[70vh] overflow-y-auto">
+        <!-- Official Government Header Strip -->
+        <div class="text-center pb-3 border-b border-dashed border-surface-container">
+          <span class="font-bold text-xs uppercase tracking-wider text-primary">Pemerintah Kabupaten Tapanuli Utara</span>
+          <h4 class="text-sm font-bold text-secondary">Badan Pendapatan Daerah (Bapenda)</h4>
+          <span class="text-[11px] text-on-surface-variant">Jl. Sisingamangaraja No. 100, Tarutung, Sumatera Utara</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs bg-surface-container-low p-3 rounded-lg">
+          <div>
+            <span class="text-on-surface-variant font-semibold">Nama Wajib Pajak:</span>
+            <p id="detailWpName" class="font-bold text-primary">PT Silindung Megah Mineral</p>
+          </div>
+          <div>
+            <span class="text-on-surface-variant font-semibold">Nomor Objek Pajak (NOP):</span>
+            <p id="detailNop" class="font-mono font-bold text-primary">12.05.010.002.019-0021.0</p>
+          </div>
+          <div>
+            <span class="text-on-surface-variant font-semibold">Jenis Penerimaan:</span>
+            <p id="detailJenis" class="font-semibold text-primary">PBJT - Jasa Perhotelan</p>
+          </div>
+          <div>
+            <span class="text-on-surface-variant font-semibold">Status Dokumen:</span>
+            <p id="detailStatus" class="font-bold text-secondary">Terbit (Belum Bayar)</p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-secondary/5 rounded-xl border border-secondary/20 flex items-center justify-between">
+          <div>
+            <span class="text-xs text-on-surface-variant">Kode Virtual Account (Bank Sumut):</span>
+            <div id="detailVa" class="text-base font-bold font-mono text-secondary">99012-0821-4412</div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-on-surface-variant">Total Tagihan Pokok:</span>
+            <div id="detailTotal" class="text-lg font-bold font-mono text-primary">Rp 48.750.000</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-surface-container flex items-center justify-between text-xs text-on-surface-variant">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-on-tertiary-container">verified</span>
+            <span>Tanda Tangan Elektronik Sah BSrE BSSN</span>
+          </div>
+          <span class="font-mono text-[10px]">SHA-256: 8a4c...d91e</span>
+        </div>
+      </div>
+
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-end gap-space-sm border-t border-surface-container">
+        <button onclick="window.print()" class="px-space-lg h-11 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-semibold flex items-center gap-1.5 shadow-sm" type="button">
+          <span class="material-symbols-outlined text-base">print</span>
+          <span>Cetak Salinan Dokumen</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 5: OTORISASI TTE BSrE -->
+  <!-- ================================================================= -->
+  <div class="fixed inset-0 z-50 hidden bg-primary/50 backdrop-blur-sm flex items-center justify-center p-4" id="modalTte">
+    <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-between border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-secondary-container text-on-secondary flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">key</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-primary">Otorisasi TTE BSrE BSSN</h3>
+            <span class="text-[11px] text-on-surface-variant">Sertifikat Elektronik Pejabat Penandatangan</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" id="btnCloseTteModal" type="button">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <div class="p-space-xl space-y-space-md">
+        <div class="p-3 rounded-lg bg-surface-container-low space-y-1 text-xs">
+          <div class="text-on-surface-variant font-semibold">Pejabat Otorisator:</div>
+          <div class="font-bold text-primary">Drs. Bambang Hermanto, M.Si</div>
+          <div class="text-[11px] text-on-surface-variant">Kepala Bidang PAD Kab. Tapanuli Utara</div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-on-surface-variant mb-1">Masukkan Passphrase TTE BSSN Anda</label>
+          <input id="ttePassphrase" type="password" class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="••••••••••••" value="taput-fiskal-2025">
+        </div>
+
+        <p class="text-[11px] text-on-surface-variant leading-tight">
+          Dengan memasukkan passphrase, Anda menyatakan pengesahan berkas SKP-D/2025/0821 secara sah menurut UU ITE.
+        </p>
+      </div>
+
+      <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-end gap-space-sm border-t border-surface-container">
+        <button id="btnSubmitTte" class="w-full h-11 rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary text-xs md:text-sm font-semibold flex items-center justify-center gap-1.5 shadow-sm" type="button">
+          <span class="material-symbols-outlined text-base">verified</span>
+          <span>Sahkan Dokumen TTE</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Mount -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Core Interactive Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
