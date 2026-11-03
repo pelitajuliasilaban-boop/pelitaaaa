@@ -104,3 +104,4 @@ Buka peramban di `http://localhost:8000`.
 - **Pengembang / Pemilik Repositori:** [Pelita Julia Silaban](https://github.com/pelitajuliasilaban-boop)
 - **Organisasi / Instansi:** Bapenda Pemerintah Kabupaten Tapanuli Utara
 - **Dokumentasi Lengkap:** Silakan baca [PRD-SIPAD-Taput.md](PRD-SIPAD-Taput.md) untuk mempelajari seluruh spesifikasi teknis, arsitektur data, skema integrasi API, dan skenario pengujian UAT.
+

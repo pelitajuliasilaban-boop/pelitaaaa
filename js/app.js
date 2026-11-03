@@ -532,3 +532,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnMobileMenu) btnMobileMenu.addEventListener('click', () => toggleSidebar(true));
   if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
 });
+
